@@ -1,0 +1,56 @@
+From c9ed53c284a6747f17366eab71ba8922e33910e2 Mon Sep 17 00:00:00 2001
+From: Lumir Balhar <lbalhar@redhat.com>
+Date: Wed, 28 Aug 2019 14:55:26 +0200
+Subject: [PATCH] Backported patch from:
+ https://github.com/urllib3/urllib3/commit/6a626be4ff623c25270e20db9002705bf4504e4e
+
+Enable TLS 1.3 post-handshake authentication
+---
+ src/urllib3/util/ssl_.py |  7 +++++++
+ test/test_ssl.py         | 15 +++++++++++++++
+ 2 files changed, 22 insertions(+)
+
+diff --git a/src/urllib3/util/ssl_.py b/src/urllib3/util/ssl_.py
+index 5ae4358..7dc4a5a 100644
+--- a/src/urllib3/util/ssl_.py
++++ b/src/urllib3/util/ssl_.py
+@@ -280,6 +280,13 @@ def create_urllib3_context(ssl_version=None, cert_reqs=None,
+ 
+     context.options |= options
+ 
++    # Enable post-handshake authentication for TLS 1.3, see GH #1634. PHA is
++    # necessary for conditional client cert authentication with TLS 1.3.
++    # The attribute is None for OpenSSL <= 1.1.0 or does not exist in older
++    # versions of Python.
++    if getattr(context, "post_handshake_auth", None) is not None:
++        context.post_handshake_auth = True
++
+     context.verify_mode = cert_reqs
+     if getattr(context, 'check_hostname', None) is not None:  # Platform-specific: Python 3.2
+         # We do our own verification, including fingerprints and alternative
+diff --git a/test/test_ssl.py b/test/test_ssl.py
+index 6a46b4f..3a99522 100644
+--- a/test/test_ssl.py
++++ b/test/test_ssl.py
+@@ -125,3 +125,18 @@ def test_wrap_socket_default_loads_default_certs(monkeypatch):
+     ssl_.ssl_wrap_socket(sock)
+ 
+     context.load_default_certs.assert_called_with()
++
++
++@pytest.mark.parametrize(
++    ["pha", "expected_pha"], [(None, None), (False, True), (True, True)]
++)
++def test_create_urllib3_context_pha(monkeypatch, pha, expected_pha):
++    context = mock.create_autospec(ssl_.SSLContext)
++    context.set_ciphers = mock.Mock()
++    context.options = 0
++    context.post_handshake_auth = pha
++    monkeypatch.setattr(ssl_, "SSLContext", lambda *_, **__: context)
++
++    assert ssl_.create_urllib3_context() is context
++
++    assert context.post_handshake_auth == expected_pha
+-- 
+2.21.0
+
