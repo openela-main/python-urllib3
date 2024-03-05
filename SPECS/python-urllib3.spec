@@ -6,7 +6,7 @@
 
 Name:           python-%{srcname}
 Version:        1.26.5
-Release:        3%{?dist}
+Release:        3%{?dist}.1
 Summary:        Python HTTP library with thread-safe connection pooling and file post
 
 License:        MIT
@@ -15,6 +15,22 @@ Source0:        %{url}/archive/%{version}/%{srcname}-%{version}.tar.gz
 # Unbundle ssl_match_hostname since we depend on it
 Source1:        ssl_match_hostname_py3.py
 BuildArch:      noarch
+
+# CVE-2023-43804
+# Added the `Cookie` header to the list of headers to strip from
+# requests when redirecting to a different host. As before, different headers
+# can be set via `Retry.remove_headers_on_redirect`.
+# Tests backported only partially as we don't use the whole part of
+# testing with dummyserver.
+# Tracking bug: https://bugzilla.redhat.com/show_bug.cgi?id=2242493
+# Upstream fix: https://github.com/urllib3/urllib3/commit/01220354d389cd05474713f8c982d05c9b17aafb
+Patch1: CVE-2023-43804.patch
+
+# CVE-2023-45803
+# Remove HTTP request body when request method is changed.
+# Tracking bug: https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2023-45803
+# Upstream fix: https://github.com/urllib3/urllib3/commit/4e98d57809dacab1cbe625fddeec1a290c478ea9
+Patch2: CVE-2023-45803.patch
 
 %description
 Python HTTP module with connection pooling and file POST abilities.
@@ -118,6 +134,10 @@ ln -s %{python3_sitelib}/__pycache__/six.cpython-%{python3_version_nodots}.pyc \
 
 
 %changelog
+* Mon Dec 18 2023 Lumír Balhar <lbalhar@redhat.com> - 1.26.5-3.1
+- Security fix for CVE-2023-45803 and CVE-2023-43804
+Resolves: RHEL-16873 RHEL-19704
+
 * Tue Feb 08 2022 Tomáš Hrnčiar <thrnciar@redhat.com> - 1.26.5-3
 - Add automatically generated Obsoletes tag with the python39- prefix
   for smoother upgrade from RHEL8
