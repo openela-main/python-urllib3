@@ -2,7 +2,7 @@
 
 Name:           python-%{srcname}
 Version:        1.24.2
-Release:        5%{?dist}
+Release:        5%{?dist}.2
 Summary:        Python HTTP library with thread-safe connection pooling and file post
 
 License:        MIT
@@ -31,6 +31,22 @@ Patch2:         Enable_TLS_1.3_post-handshake_authentication.patch
 # CRLF injection via HTTP request method
 # Resolved upstream: https://github.com/urllib3/urllib3/pull/1800
 Patch3: CVE-2020-26137.patch
+
+# CVE-2023-43804
+# Added the `Cookie` header to the list of headers to strip from
+# requests when redirecting to a different host. As before, different headers
+# can be set via `Retry.remove_headers_on_redirect`.
+# Tests backported only partially as we don't use the whole part of
+# testing with dummyserver.
+# Tracking bug: https://bugzilla.redhat.com/show_bug.cgi?id=2242493
+# Upstream fix: https://github.com/urllib3/urllib3/commit/01220354d389cd05474713f8c982d05c9b17aafb
+Patch4: CVE-2023-43804.patch
+
+# CVE-2023-45803
+# Remove HTTP request body when request method is changed.
+# Tracking bug: https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2023-45803
+# Upstream fix: https://github.com/urllib3/urllib3/commit/4e98d57809dacab1cbe625fddeec1a290c478ea9
+Patch5: CVE-2023-45803.patch
 
 %description
 Python HTTP module with connection pooling and file POST abilities.
@@ -61,6 +77,8 @@ Python3 HTTP module with connection pooling and file POST abilities.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
+%patch5 -p1
 
 # Make sure that the RECENT_DATE value doesn't get too far behind what the current date is.
 # RECENT_DATE must not be older that 2 years from the build time, or else test_recent_date
@@ -136,6 +154,14 @@ popd
 
 
 %changelog
+* Tue Dec 12 2023 Lumír Balhar <lbalhar@redhat.com> - 1.24.2-5.2
+- Security fix for CVE-2023-45803
+Resolves: RHEL-16871
+
+* Thu Oct 12 2023 Lumír Balhar <lbalhar@redhat.com> - 1.24.2-5.1
+- Security fix for CVE-2023-43804
+Resolves: RHEL-17861
+
 * Mon Nov 09 2020 Charalampos Stratakis <cstratak@redhat.com> - 1.24.2-5
 - Security fix for CVE-2020-26137
 Resolves: rhbz#1883889
