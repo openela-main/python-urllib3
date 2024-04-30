@@ -6,7 +6,7 @@
 
 Name:           python-%{srcname}
 Version:        1.26.5
-Release:        3%{?dist}.1
+Release:        5%{?dist}
 Summary:        Python HTTP library with thread-safe connection pooling and file post
 
 License:        MIT
@@ -134,9 +134,13 @@ ln -s %{python3_sitelib}/__pycache__/six.cpython-%{python3_version_nodots}.pyc \
 
 
 %changelog
-* Mon Dec 18 2023 Lumír Balhar <lbalhar@redhat.com> - 1.26.5-3.1
-- Security fix for CVE-2023-45803 and CVE-2023-43804
-Resolves: RHEL-16873 RHEL-19704
+* Tue Dec 12 2023 Lumír Balhar <lbalhar@redhat.com> - 1.26.5-5
+- Security fix for CVE-2023-45803
+Resolves: RHEL-16874
+
+* Thu Oct 12 2023 Lumír Balhar <lbalhar@redhat.com> - 1.26.5-4
+- Security fix for CVE-2023-43804
+Resolves: RHEL-12001
 
 * Tue Feb 08 2022 Tomáš Hrnčiar <thrnciar@redhat.com> - 1.26.5-3
 - Add automatically generated Obsoletes tag with the python39- prefix
