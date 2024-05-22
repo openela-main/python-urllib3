@@ -2,7 +2,7 @@
 
 Name:           python-%{srcname}
 Version:        1.24.2
-Release:        5%{?dist}.2
+Release:        7%{?dist}
 Summary:        Python HTTP library with thread-safe connection pooling and file post
 
 License:        MIT
@@ -154,13 +154,13 @@ popd
 
 
 %changelog
-* Tue Dec 12 2023 Lumír Balhar <lbalhar@redhat.com> - 1.24.2-5.2
+* Tue Dec 12 2023 Lumír Balhar <lbalhar@redhat.com> - 1.24.2-7
 - Security fix for CVE-2023-45803
-Resolves: RHEL-16871
+Resolves: RHEL-16872
 
-* Thu Oct 12 2023 Lumír Balhar <lbalhar@redhat.com> - 1.24.2-5.1
+* Thu Oct 12 2023 Lumír Balhar <lbalhar@redhat.com> - 1.24.2-6
 - Security fix for CVE-2023-43804
-Resolves: RHEL-17861
+Resolves: RHEL-11992
 
 * Mon Nov 09 2020 Charalampos Stratakis <cstratak@redhat.com> - 1.24.2-5
 - Security fix for CVE-2020-26137
