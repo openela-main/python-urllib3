@@ -6,7 +6,7 @@
 
 Name:           python-%{srcname}
 Version:        1.25.10
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Python HTTP library with thread-safe connection pooling and file post
 
 License:        MIT
@@ -18,6 +18,17 @@ Source1:        ssl_match_hostname_py3.py
 # Tracking bug: https://bugzilla.redhat.com/show_bug.cgi?id=1968074
 # Upstream fix: https://github.com/urllib3/urllib3/commit/2d4a3fee6de2fa45eb82169361918f759269b4ec
 Patch0:         CVE-2021-33503.patch
+
+# CVE-2023-43804
+# Added the `Cookie` header to the list of headers to strip from
+# requests when redirecting to a different host. As before, different headers
+# can be set via `Retry.remove_headers_on_redirect`.
+# Tests backported only partially as we don't use the whole part of
+# testing with dummyserver.
+# Tracking bug: https://bugzilla.redhat.com/show_bug.cgi?id=2242493
+# Upstream fix: https://github.com/urllib3/urllib3/commit/01220354d389cd05474713f8c982d05c9b17aafb
+Patch1: CVE-2023-43804.patch
+
 BuildArch:      noarch
 # Exclude i686 arch. Due to a modularity issue it's being added to the
 # x86_64 compose of CRB, but we don't want to ship it at all.
@@ -123,6 +134,10 @@ popd
 
 
 %changelog
+* Thu Oct 12 2023 Lumír Balhar <lbalhar@redhat.com> - 1.25.10-5
+- Security fix for CVE-2023-43804
+Resolves: RHEL-11997
+
 * Tue Jun 29 2021 Lumír Balhar <lbalhar@redhat.com> - 1.25.10-4
 - Fix for CVE-2021-33503 Catastrophic backtracking in URL authority parser
 Resolves: rhbz#1968074
