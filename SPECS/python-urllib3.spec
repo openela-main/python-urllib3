@@ -2,7 +2,7 @@
 
 Name:           python-%{srcname}
 Version:        1.24.2
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Python HTTP library with thread-safe connection pooling and file post
 
 License:        MIT
@@ -48,6 +48,13 @@ Patch4: CVE-2023-43804.patch
 # Upstream fix: https://github.com/urllib3/urllib3/commit/4e98d57809dacab1cbe625fddeec1a290c478ea9
 Patch5: CVE-2023-45803.patch
 
+# CVE-2024-37891
+# Added the `Proxy-Authorization` header to the list of headers to strip from requests
+# when redirecting to a different host.
+# Tracking bug: https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2024-37891
+# Upstream fix: https://github.com/urllib3/urllib3/commit/40b6d1605814dd1db0a46e202d6e56f2e4c9a468
+Patch6: CVE-2024-37891.patch
+
 %description
 Python HTTP module with connection pooling and file POST abilities.
 
@@ -79,6 +86,7 @@ Python3 HTTP module with connection pooling and file POST abilities.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
 
 # Make sure that the RECENT_DATE value doesn't get too far behind what the current date is.
 # RECENT_DATE must not be older that 2 years from the build time, or else test_recent_date
@@ -154,6 +162,10 @@ popd
 
 
 %changelog
+* Mon Jul 01 2024 Lumír Balhar <lbalhar@redhat.com> - 1.24.2-8
+- Security fix for CVE-2024-37891
+Resolves: RHEL-45334
+
 * Tue Dec 12 2023 Lumír Balhar <lbalhar@redhat.com> - 1.24.2-7
 - Security fix for CVE-2023-45803
 Resolves: RHEL-16872
