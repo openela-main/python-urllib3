@@ -1,0 +1,38 @@
+From f1d40fd07f7b5d9cf846a18fb5a920b4be07dfc5 Mon Sep 17 00:00:00 2001
+From: Hasan Ramezani <hasan.r67@gmail.com>
+Date: Thu, 20 Jan 2022 15:56:02 +0100
+Subject: [PATCH] [1.26] Add server_hostname to SSL_KEYWORDS
+
+---
+ src/urllib3/poolmanager.py                | 1 +
+ test/with_dummyserver/test_poolmanager.py | 5 +++++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/src/urllib3/poolmanager.py b/src/urllib3/poolmanager.py
+index 3a31a285bf..ca4ec34118 100644
+--- a/src/urllib3/poolmanager.py
++++ b/src/urllib3/poolmanager.py
+@@ -34,6 +34,7 @@
+     "ca_cert_dir",
+     "ssl_context",
+     "key_password",
++    "server_hostname",
+ )
+ 
+ # All known keyword arguments that could be provided to the pool manager, its
+diff --git a/test/with_dummyserver/test_poolmanager.py b/test/with_dummyserver/test_poolmanager.py
+index d877cc99ac..fa07a372a9 100644
+--- a/test/with_dummyserver/test_poolmanager.py
++++ b/test/with_dummyserver/test_poolmanager.py
+@@ -346,6 +346,11 @@ def test_http_with_ssl_keywords(self):
+             r = http.request("GET", "http://%s:%s/" % (self.host, self.port))
+             assert r.status == 200
+ 
++    def test_http_with_server_hostname(self):
++        with PoolManager(server_hostname="example.com") as http:
++            r = http.request("GET", "http://%s:%s/" % (self.host, self.port))
++            assert r.status == 200
++
+     def test_http_with_ca_cert_dir(self):
+         with PoolManager(ca_certs="REQUIRED", ca_cert_dir="/nosuchdir") as http:
+             r = http.request("GET", "http://%s:%s/" % (self.host, self.port))

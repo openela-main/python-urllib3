@@ -6,7 +6,7 @@
 
 Name:           python-%{srcname}
 Version:        1.26.5
-Release:        5%{?dist}
+Release:        5%{?dist}.1
 Summary:        Python HTTP library with thread-safe connection pooling and file post
 
 License:        MIT
@@ -31,6 +31,17 @@ Patch1: CVE-2023-43804.patch
 # Tracking bug: https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2023-45803
 # Upstream fix: https://github.com/urllib3/urllib3/commit/4e98d57809dacab1cbe625fddeec1a290c478ea9
 Patch2: CVE-2023-45803.patch
+
+# PoolManager.urlopen fails with TypeError for http connection if the PoolManager is instantiated with server_hostname
+# Tracking bug: https://issues.redhat.com/browse/RHEL-39285
+# Upstream fix: https://github.com/urllib3/urllib3/commit/f1d40fd07f7b5d9cf846a18fb5a920b4be07dfc5
+Patch3: Add-server_hostname-to-SSL_KEYWORDS.patch
+
+# CVE-2024-37891
+# Proxy-authorization request header is not stripped during cross-origin redirects.
+# Tracking bug: https://issues.redhat.com/browse/RHEL-43172
+# Upstream fix: https://github.com/urllib3/urllib3/commit/40b6d1605814dd1db0a46e202d6e56f2e4c9a468
+Patch4: CVE-2024-37891.patch
 
 %description
 Python HTTP module with connection pooling and file POST abilities.
@@ -134,6 +145,12 @@ ln -s %{python3_sitelib}/__pycache__/six.cpython-%{python3_version_nodots}.pyc \
 
 
 %changelog
+* Tue Jun 18 2024 Tomáš Hrnčiar <thrnciar@redhat.com> - 1.26.5-5.1
+- Security fix for CVE-2024-37891
+- Backport upstream patch to fix TypeError for http connection if the PoolManager
+- is instantiated with server_hostname
+Resolves: RHEL-49853
+
 * Tue Dec 12 2023 Lumír Balhar <lbalhar@redhat.com> - 1.26.5-5
 - Security fix for CVE-2023-45803
 Resolves: RHEL-16874
