@@ -6,7 +6,7 @@
 
 Name:           python-%{srcname}
 Version:        1.26.5
-Release:        5%{?dist}.1
+Release:        6%{?dist}
 Summary:        Python HTTP library with thread-safe connection pooling and file post
 
 License:        MIT
@@ -145,11 +145,12 @@ ln -s %{python3_sitelib}/__pycache__/six.cpython-%{python3_version_nodots}.pyc \
 
 
 %changelog
-* Tue Jun 18 2024 Tomáš Hrnčiar <thrnciar@redhat.com> - 1.26.5-5.1
+* Tue Jun 18 2024 Tomáš Hrnčiar <thrnciar@redhat.com> - 1.26.5-6
 - Security fix for CVE-2024-37891
 - Backport upstream patch to fix TypeError for http connection if the PoolManager
 - is instantiated with server_hostname
-Resolves: RHEL-49853
+Resolves: RHEL-43172
+Resolves: RHEL-39285
 
 * Tue Dec 12 2023 Lumír Balhar <lbalhar@redhat.com> - 1.26.5-5
 - Security fix for CVE-2023-45803
