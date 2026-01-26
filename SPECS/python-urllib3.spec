@@ -6,7 +6,7 @@
 
 Name:           python-%{srcname}
 Version:        1.26.5
-Release:        6%{?dist}
+Release:        6%{?dist}.1
 Summary:        Python HTTP library with thread-safe connection pooling and file post
 
 License:        MIT
@@ -42,6 +42,10 @@ Patch3: Add-server_hostname-to-SSL_KEYWORDS.patch
 # Tracking bug: https://issues.redhat.com/browse/RHEL-43172
 # Upstream fix: https://github.com/urllib3/urllib3/commit/40b6d1605814dd1db0a46e202d6e56f2e4c9a468
 Patch4: CVE-2024-37891.patch
+
+Patch5: CVE-2025-66471.patch
+Patch6: CVE-2025-66418.patch
+Patch7: CVE-2026-21441.patch
 
 %description
 Python HTTP module with connection pooling and file POST abilities.
@@ -145,6 +149,12 @@ ln -s %{python3_sitelib}/__pycache__/six.cpython-%{python3_version_nodots}.pyc \
 
 
 %changelog
+* Wed Dec 17 2025 Miro Hrončok <mhroncok@redhat.com> - 1.26.5-6.1
+- Security fix for CVE-2025-66471
+- Security fix for CVE-2025-66418
+- Security fix for CVE-2026-21441
+Resolves: RHEL-139401
+
 * Tue Jun 18 2024 Tomáš Hrnčiar <thrnciar@redhat.com> - 1.26.5-6
 - Security fix for CVE-2024-37891
 - Backport upstream patch to fix TypeError for http connection if the PoolManager
