@@ -6,7 +6,7 @@
 
 Name:           python-%{srcname}
 Version:        1.26.5
-Release:        6%{?dist}.1
+Release:        8%{?dist}
 Summary:        Python HTTP library with thread-safe connection pooling and file post
 
 License:        MIT
@@ -46,6 +46,9 @@ Patch4: CVE-2024-37891.patch
 Patch5: CVE-2025-66471.patch
 Patch6: CVE-2025-66418.patch
 Patch7: CVE-2026-21441.patch
+Patch8: CVE-2026-44431.patch
+Patch9: CVE-2026-44432.patch
+
 
 %description
 Python HTTP module with connection pooling and file POST abilities.
@@ -149,11 +152,15 @@ ln -s %{python3_sitelib}/__pycache__/six.cpython-%{python3_version_nodots}.pyc \
 
 
 %changelog
-* Wed Dec 17 2025 Miro Hrončok <mhroncok@redhat.com> - 1.26.5-6.1
+* Wed Jun 03 2026 Tomáš Hrnčiar <thrnciar@redhat.com> - 1.26.5-8
+- Security fix for CVE-2026-44431 and CVE-2026-44432
+Resolves: RHEL-184816, RHEL-185123
+
+* Tue Jan 27 2026 Miro Hrončok <mhroncok@redhat.com> - 1.26.5-7
 - Security fix for CVE-2025-66471
 - Security fix for CVE-2025-66418
 - Security fix for CVE-2026-21441
-Resolves: RHEL-139401
+Resolves: RHEL-142750, RHEL-139398, RHEL-142767
 
 * Tue Jun 18 2024 Tomáš Hrnčiar <thrnciar@redhat.com> - 1.26.5-6
 - Security fix for CVE-2024-37891
