@@ -6,7 +6,7 @@
 
 Name:           python-%{srcname}
 Version:        1.26.5
-Release:        8%{?dist}
+Release:        8%{?dist}.2
 Summary:        Python HTTP library with thread-safe connection pooling and file post
 
 License:        MIT
@@ -48,6 +48,17 @@ Patch6: CVE-2025-66418.patch
 Patch7: CVE-2026-21441.patch
 Patch8: CVE-2026-44431.patch
 Patch9: CVE-2026-44432.patch
+
+# CVE-2026-97689
+# Bound chunk-size line reads to prevent memory exhaustion DoS
+# Tracking bug: https://issues.redhat.com/browse/RHEL-282267
+# Upstream fix: https://github.com/urllib3/urllib3/commit/cd770b059b543be29298ea5c52afb0b1b090f5ed
+Patch10: CVE-2026-97689.patch
+
+# https://issues.redhat.com/browse/RHEL-282326
+# https://github.com/urllib3/urllib3/commit/b6447295fff7b38fdffc67e0df9712d60cef3cc3
+# https://github.com/urllib3/urllib3/commit/07408cec79d1856d81bb42c74a904a24fdb9e465
+Patch11: CVE-2026-97687.patch
 
 
 %description
@@ -152,6 +163,16 @@ ln -s %{python3_sitelib}/__pycache__/six.cpython-%{python3_version_nodots}.pyc \
 
 
 %changelog
+* Tue Oct 13 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 1.26.5-8.2
+- CVE-2026-97687 python-urllib3: urllib3: Traffic interception
+  via HTTPS proxy TLS configuration override
+Resolves: RHEL-282326
+
+* Tue Oct 13 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 1.26.5-8.1
+- CVE-2026-97689 python-urllib3: urllib3: Denial of Service via unbounded
+  memory allocation in chunk parser
+Resolves: RHEL-282267
+
 * Wed Jun 03 2026 Tomáš Hrnčiar <thrnciar@redhat.com> - 1.26.5-8
 - Security fix for CVE-2026-44431 and CVE-2026-44432
 Resolves: RHEL-184816, RHEL-185123
